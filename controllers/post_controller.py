@@ -4,7 +4,7 @@ from blog_backend import db
 
 import blog_backend.services.main_service as main_service
 
-post = Namespace(name='post', path='/post', description='This api is post')
+post = Namespace(name='posts', path='/posts', description='This api is posts')
 cursor = db.cursor()
 
 @post.route('/')
