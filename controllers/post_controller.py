@@ -36,4 +36,4 @@ class PostCountRoute(Resource):
         
         # 결과를 요청한 형식으로 변환
         response = [{'category': category, 'count': post_count} for category, post_count in result]
-        return jsonify(response)
+        return jsonify(result=response)
