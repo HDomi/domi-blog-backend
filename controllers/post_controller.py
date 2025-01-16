@@ -24,6 +24,3 @@ class PostRoute(Resource):
             return jsonify(result=return_result)
         except Exception as e:
             return jsonify(error=str(e))
-        finally:
-            cursor.close()
-        
