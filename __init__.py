@@ -4,7 +4,6 @@ import pymysql
 from dotenv import load_dotenv
 import os
 from flask_restx import Api
-from flask_cors import CORS
 
 api = Api(
     version='1.0',
@@ -31,10 +30,7 @@ db = pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PWD, 
 
 def create_app():
     app = Flask(__name__)
-    cors = CORS(app, resources={
-    r"/v1/*": {"origin": "*"},
-    r"/api/*": {"origin": "*"},
-    })
+    
     api.init_app(app)
     
     from blog_backend.routes import routes_list
