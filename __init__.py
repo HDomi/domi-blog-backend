@@ -31,10 +31,13 @@ db = pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PWD, 
 
 def create_app():
     app = Flask(__name__)
+    cors = CORS(app, resources={
+    r"/v1/*": {"origin": "*"},
+    r"/api/*": {"origin": "*"},
+    })
     api.init_app(app)
     
     from blog_backend.routes import routes_list
     routes_list(app)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     return app
