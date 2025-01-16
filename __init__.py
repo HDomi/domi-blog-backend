@@ -11,8 +11,7 @@ api = Api(
     title='blog_project',
     prefix='/api',
     contact='',
-    contact_email='email address',
-    description="desc",
+    contact_emrrn="desc",
 )
 # .env 파일 auto load
 load_dotenv()

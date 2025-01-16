@@ -24,3 +24,16 @@ class PostRoute(Resource):
             return jsonify(result=return_result)
         except Exception as e:
             return jsonify(error=str(e))
+
+@post.route('/count')
+class PostCountRoute(Resource):
+    def get(self):
+        """카테고리별 포스트 수 조회"""
+        # 카테고리별 포스트 수 조회
+        with db.cursor() as cursor:
+            cursor.execute("SELECT category, COUNT(*) as post_count FROM posts GROUP BY category;")
+            result = cursor.fetchall()
+        
+        # 결과를 요청한 형식으로 변환
+        response = [{'category': category, 'count': post_count} for category, post_count in result]
+        return jsonify(response)
