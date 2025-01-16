@@ -33,5 +33,5 @@ jobs:
             docker rm ${{ env.SERVER_DOCKER_IMG_NAME }} || true
             sleep 30
             docker build --build-arg SECRET_KEY=${{ secrets.SECRET_KEY }} --build-arg DB_USER=${{ secrets.DB_USER }} --build-arg DB_PWD=${{ secrets.DB_PWD }} --build-arg DB_HOST=${{ secrets.DB_HOST }} --build-arg DB_PORT=${{ secrets.DB_PORT }} --build-arg DB_NAME=${{ secrets.DB_NAME }} -t ${{ env.SERVER_DOCKER_IMG_NAME }}:latest -f Dockerfile . && \
-            docker run -e SECRET_KEY=${{ secrets.SECRET_KEY }} -e DB_USER=${{ secrets.DB_USER }} -e DB_PWD=${{ secrets.DB_PWD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} -d --name ${{ env.SERVER_DOCKER_IMG_NAME }} -p 3000:3000 ${{ env.SERVER_DOCKER_IMG_NAME }}:latest
+            docker run -e SECRET_KEY=${{ secrets.SECRET_KEY }} -e DB_USER=${{ secrets.DB_USER }} -e DB_PWD=${{ secrets.DB_PWD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} -d --name ${{ env.SERVER_DOCKER_IMG_NAME }} -p 3308:3308 ${{ env.SERVER_DOCKER_IMG_NAME }}:latest
           EOF
