@@ -37,7 +37,7 @@ class PostRoute(Resource):
         search_text = request.args.get('searchText')  # 쿼리 파라미터에서 searchText 가져오기
         
         try:
-            sql = "SELECT id, user_id, user_email, category, title, inserted_at, like_count FROM posts WHERE 1=1"  # 기본 쿼리
+            sql = "SELECT id, user_id, user_email, category, title, inserted_at, liked_count FROM posts WHERE 1=1"  # 기본 쿼리
             params = []
 
             if category:
