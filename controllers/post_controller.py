@@ -1,11 +1,27 @@
 from flask_restx import Namespace, Resource
 from flask import jsonify, request
-from blog_backend import db
-
+# from blog_backend import db
+from dotenv import load_dotenv
+import os
+import pymysql
 import blog_backend.services.main_service as main_service
 
+# .env 파일 auto load
+load_dotenv()
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+DB_USER = os.getenv('DB_USER')
+DB_PWD = os.getenv('DB_PWD')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = int(os.getenv('DB_PORT'))
+DB_NAME = os.getenv('DB_NAME')
+
+db = pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PWD, db=DB_NAME, charset='utf8')
 ROUTER = Namespace(name='Main Api들', path='/', description='This api is posts')
 cursor = db.cursor()
+
+db.ping(reconnect=True)
 
 @ROUTER.route('/posts')
 @ROUTER.doc(params={'category': '파라미터로 입력된 카테고리'})
