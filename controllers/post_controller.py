@@ -37,7 +37,7 @@ class PostRoute(Resource):
         search_text = request.args.get('searchText')  # 쿼리 파라미터에서 searchText 가져오기
         
         try:
-            sql = "SELECT * FROM posts WHERE 1=1"  # 기본 쿼리
+            sql = "SELECT id, user_id, user_email, category, title, inserted_at, like_count FROM posts WHERE 1=1"  # 기본 쿼리
             params = []
 
             if category:
@@ -71,3 +71,22 @@ class PostCountRoute(Resource):
         # 결과를 요청한 형식으로 변환
         response = [{'category': category, 'count': post_count} for category, post_count in result]
         return jsonify(result=response)
+    
+    
+@ROUTER.route('/posts/detail/<int:post_id>')
+class PostDetailRoute(Resource):
+    def get(self, post_id):
+        """포스트 상세 조회"""
+        try:
+            sql = "SELECT * FROM posts WHERE id = %s"  # 포스트 ID로 조회
+            cursor.execute(sql, (post_id,))  # 쿼리 실행
+            result = cursor.fetchone()  # 단일 결과 가져오기
+            
+            if result:
+                column_names = [desc[0] for desc in cursor.description]  # 컬럼명 가져오기
+                return_result = dict(zip(column_names, result))  # 컬럼명과 값을 합쳐서 딕셔너리로 반환
+                return jsonify(result=return_result)
+            else:
+                return jsonify(error="포스트를 찾을 수 없습니다."), 404  # 포스트가 없을 경우 오류 반환
+        except Exception as e:
+            return jsonify(error=str(e))
