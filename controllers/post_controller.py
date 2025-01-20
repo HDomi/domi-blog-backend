@@ -63,6 +63,9 @@ class PostRoute(Resource):
             return jsonify(result=return_result)
         except Exception as e:
             return jsonify(error=str(e))
+        finally:
+            cursor.close()  # 커서 닫기
+            db.close()  # 데이터베이스 연결 닫기
 
 @ROUTER.route('/posts/count')
 class PostCountRoute(Resource):
@@ -70,20 +73,26 @@ class PostCountRoute(Resource):
         """카테고리별 포스트 수 조회"""
         db = get_db_connection()  # 데이터베이스 연결 생성
         cursor = db.cursor()  # 커서 생성
-        # 카테고리별 포스트 수 조회
-        with db.cursor() as cursor:
+        try:
             cursor.execute("SELECT category, COUNT(*) as post_count FROM posts GROUP BY category;")
             result = cursor.fetchall()
         
-        # 결과를 요청한 형식으로 변환
-        response = [{'category': category, 'count': post_count} for category, post_count in result]
-        return jsonify(result=response)
+            # 결과를 요청한 형식으로 변환
+            response = [{'category': category, 'count': post_count} for category, post_count in result]
+            return jsonify(result=response)
+        except Exception as e:
+            return jsonify(error=str(e))
+        finally:
+            cursor.close()  # 커서 닫기
+            db.close()  # 데이터베이스 연결 닫기
     
     
 @ROUTER.route('/posts/detail/<int:post_id>')
 class PostDetailRoute(Resource):
     def get(self, post_id):
         """포스트 상세 조회"""
+        db = get_db_connection()  # 데이터베이스 연결 생성
+        cursor = db.cursor()  # 커서 생성
         try:
             sql = "SELECT * FROM posts WHERE id = %s"  # 포스트 ID로 조회
             cursor.execute(sql, (post_id,))  # 쿼리 실행
@@ -97,3 +106,6 @@ class PostDetailRoute(Resource):
                 return jsonify(error="포스트를 찾을 수 없습니다."), 404  # 포스트가 없을 경우 오류 반환
         except Exception as e:
             return jsonify(error=str(e))
+        finally:
+            cursor.close()  # 커서 닫기
+            db.close()  # 데이터베이스 연결 닫기
