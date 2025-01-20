@@ -22,6 +22,9 @@ ROUTER = Namespace(name='Main Api들', path='/', description='This api is posts'
 cursor = db.cursor()
 
 db.ping(reconnect=True)
+def get_db_connection():
+    """데이터베이스 연결을 생성하고 반환하는 함수"""
+    return pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PWD, db=DB_NAME, charset='utf8')
 
 @ROUTER.route('/posts')
 @ROUTER.doc(params={'category': '파라미터로 입력된 카테고리'})
@@ -30,6 +33,8 @@ db.ping(reconnect=True)
 class PostRoute(Resource):
     def get(self) -> str:
         """포스트 조회"""
+        db = get_db_connection()  # 데이터베이스 연결 생성
+        cursor = db.cursor()  # 커서 생성
         category = request.args.get('category')  # 쿼리 파라미터에서 category 가져오기
         if category:
             category = category.upper()  # 대문자로 변환
@@ -63,6 +68,8 @@ class PostRoute(Resource):
 class PostCountRoute(Resource):
     def get(self):
         """카테고리별 포스트 수 조회"""
+        db = get_db_connection()  # 데이터베이스 연결 생성
+        cursor = db.cursor()  # 커서 생성
         # 카테고리별 포스트 수 조회
         with db.cursor() as cursor:
             cursor.execute("SELECT category, COUNT(*) as post_count FROM posts GROUP BY category;")
